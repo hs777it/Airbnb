@@ -34,7 +34,7 @@ class PropertyImages(models.Model):
     image = models.ImageField(upload_to='propertyimages/')
 
     def __str__(self):
-        return str(self.name)
+        return str(self.property)
 
 class Place(models.Model):
     name = models.CharField(max_length=50)
@@ -72,8 +72,8 @@ class PropertyBook(models.Model):
     property = models.ForeignKey(Property,related_name='book_property',on_delete=models.CASCADE)
     date_from = models.DateField(default=timezone.now)
     date_to = models.DateField(default=timezone.now)
-    guest = models.CharField(max_length=2,choices=COUNT)
-    children = models.CharField(max_length=2,choices=COUNT)
+    guest = models.IntegerField(max_length=2,choices=COUNT)
+    children = models.IntegerField(max_length=2,choices=COUNT)
 
     def __str__(self):
         return str(self.property)

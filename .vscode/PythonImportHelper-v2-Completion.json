@@ -289,6 +289,22 @@
         "documentation": {}
     },
     {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
         "label": "models",
         "importPath": "django.db",
         "description": "django.db",
@@ -409,6 +425,14 @@
         "documentation": {}
     },
     {
+        "label": "redirect",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
         "label": "render",
         "importPath": "django.shortcuts",
         "description": "django.shortcuts",
@@ -500,6 +524,22 @@
         "documentation": {}
     },
     {
+        "label": "SummernoteModelAdmin",
+        "importPath": "django_summernote.admin",
+        "description": "django_summernote.admin",
+        "isExtraImport": true,
+        "detail": "django_summernote.admin",
+        "documentation": {}
+    },
+    {
+        "label": "FormMixin",
+        "importPath": "django.views.generic.edit",
+        "description": "django.views.generic.edit",
+        "isExtraImport": true,
+        "detail": "django.views.generic.edit",
+        "documentation": {}
+    },
+    {
         "label": "ListView",
         "importPath": "django.views.generic",
         "description": "django.views.generic",
@@ -513,6 +553,31 @@
         "description": "django.views.generic",
         "isExtraImport": true,
         "detail": "django.views.generic",
+        "documentation": {}
+    },
+    {
+        "label": "FilterView",
+        "importPath": "django_filters.views",
+        "description": "django_filters.views",
+        "isExtraImport": true,
+        "detail": "django_filters.views",
+        "documentation": {}
+    },
+    {
+        "label": "forms",
+        "importPath": "django",
+        "description": "django",
+        "isExtraImport": true,
+        "detail": "django",
+        "documentation": {}
+    },
+    {
+        "label": "django_filters",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django_filters",
+        "description": "django_filters",
+        "detail": "django_filters",
         "documentation": {}
     },
     {
@@ -538,7 +603,7 @@
         "kind": 5,
         "importPath": "project.urls",
         "description": "project.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('property/',include('property.urls',namespace='property'))\n]\nurlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\nurlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('property/',include('property.urls',namespace='property')),\n    path('summernote/', include('django_summernote.urls')),\n]\nurlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)\nurlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)",
         "detail": "project.urls",
         "documentation": {}
     },
@@ -876,6 +941,24 @@
         "documentation": {}
     },
     {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "property.migrations.0004_alter_propertybook_children_alter_propertybook_guest",
+        "description": "property.migrations.0004_alter_propertybook_children_alter_propertybook_guest",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('property', '0003_property_created_at'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='propertybook',\n            name='children',\n            field=models.IntegerField(choices=[(1, 1), (2, 2), (3, 3), (4, 4)], max_length=2),\n        ),",
+        "detail": "property.migrations.0004_alter_propertybook_children_alter_propertybook_guest",
+        "documentation": {}
+    },
+    {
+        "label": "SomeModelAdmin",
+        "kind": 6,
+        "importPath": "property.admin",
+        "description": "property.admin",
+        "peekOfCode": "class SomeModelAdmin(SummernoteModelAdmin):  # instead of ModelAdmin\n    summernote_fields = '__all__'\nadmin.site.register(Property,SomeModelAdmin)\nadmin.site.register(PropertyBook)\nadmin.site.register(PropertyImages)\nadmin.site.register(PropertyReview)\nadmin.site.register(Place)\nadmin.site.register(Category)",
+        "detail": "property.admin",
+        "documentation": {}
+    },
+    {
         "label": "PropertyConfig",
         "kind": 6,
         "importPath": "property.apps",
@@ -898,7 +981,7 @@
         "kind": 6,
         "importPath": "property.models",
         "description": "property.models",
-        "peekOfCode": "class PropertyImages(models.Model):    \n    property =  models.ForeignKey(Property,related_name='property_image',on_delete=models.CASCADE)\n    image = models.ImageField(upload_to='propertyimages/')\n    def __str__(self):\n        return str(self.name)\nclass Place(models.Model):\n    name = models.CharField(max_length=50)\n    image = models.ImageField(upload_to='places/')\n    def __str__(self):\n        return str(self.name)    ",
+        "peekOfCode": "class PropertyImages(models.Model):    \n    property =  models.ForeignKey(Property,related_name='property_image',on_delete=models.CASCADE)\n    image = models.ImageField(upload_to='propertyimages/')\n    def __str__(self):\n        return str(self.property)\nclass Place(models.Model):\n    name = models.CharField(max_length=50)\n    image = models.ImageField(upload_to='places/')\n    def __str__(self):\n        return str(self.name)    ",
         "detail": "property.models",
         "documentation": {}
     },
@@ -934,7 +1017,7 @@
         "kind": 6,
         "importPath": "property.models",
         "description": "property.models",
-        "peekOfCode": "class PropertyBook(models.Model):\n    user = models.ForeignKey(User,related_name='book_owner',on_delete=models.CASCADE)\n    property = models.ForeignKey(Property,related_name='book_property',on_delete=models.CASCADE)\n    date_from = models.DateField(default=timezone.now)\n    date_to = models.DateField(default=timezone.now)\n    guest = models.CharField(max_length=2,choices=COUNT)\n    children = models.CharField(max_length=2,choices=COUNT)\n    def __str__(self):\n        return str(self.property)",
+        "peekOfCode": "class PropertyBook(models.Model):\n    user = models.ForeignKey(User,related_name='book_owner',on_delete=models.CASCADE)\n    property = models.ForeignKey(Property,related_name='book_property',on_delete=models.CASCADE)\n    date_from = models.DateField(default=timezone.now)\n    date_to = models.DateField(default=timezone.now)\n    guest = models.IntegerField(max_length=2,choices=COUNT)\n    children = models.IntegerField(max_length=2,choices=COUNT)\n    def __str__(self):\n        return str(self.property)",
         "detail": "property.models",
         "documentation": {}
     },
@@ -952,7 +1035,7 @@
         "kind": 6,
         "importPath": "property.views",
         "description": "property.views",
-        "peekOfCode": "class PropertyList(ListView):\n    model = Property\n    ## filter\n    ## pagination\nclass PropertyDetail(DetailView):\n    model = Property\n    ## Booking",
+        "peekOfCode": "class PropertyList(FilterView):\n    model = Property\n    paginate_by = 2\n    filterset_class = PropertyFilter\n    template_name = 'property/property_list.html'\nclass PropertyDetail(FormMixin, DetailView):\n    model = Property\n    form_class = PropertyBookForm\n    # Related Hotels\n    def get_context_data(self, **kwargs) :",
         "detail": "property.views",
         "documentation": {}
     },
@@ -961,7 +1044,7 @@
         "kind": 6,
         "importPath": "property.views",
         "description": "property.views",
-        "peekOfCode": "class PropertyDetail(DetailView):\n    model = Property\n    ## Booking",
+        "peekOfCode": "class PropertyDetail(FormMixin, DetailView):\n    model = Property\n    form_class = PropertyBookForm\n    # Related Hotels\n    def get_context_data(self, **kwargs) :\n        context = super().get_context_data(**kwargs)\n        context[\"related\"] = Property.objects.filter(category=self.get_object().category)[:2]\n        return context\n    def post(self,request, *args, **kwargs):\n        form = self.get_form()",
         "detail": "property.views",
         "documentation": {}
     },
@@ -981,6 +1064,24 @@
         "description": "property.urls",
         "peekOfCode": "urlpatterns = [\n    path('', PropertyList.as_view(),name='property_list'),\n    path('<slug:slug>', PropertyDetail.as_view(),name='property_detail'),\n]",
         "detail": "property.urls",
+        "documentation": {}
+    },
+    {
+        "label": "PropertyBookForm",
+        "kind": 6,
+        "importPath": "property.forms",
+        "description": "property.forms",
+        "peekOfCode": "class PropertyBookForm(forms.ModelForm):\n    class Meta:\n        model = PropertyBook\n        fields = ['date_from','date_to','guest','children']",
+        "detail": "property.forms",
+        "documentation": {}
+    },
+    {
+        "label": "PropertyFilter",
+        "kind": 6,
+        "importPath": "property.filters",
+        "description": "property.filters",
+        "peekOfCode": "class PropertyFilter(django_filters.FilterSet):\n    class Meta:\n        model = Property\n        fields = ['name', 'description', 'place', 'category']",
+        "detail": "property.filters",
         "documentation": {}
     },
     {
