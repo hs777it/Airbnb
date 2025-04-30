@@ -1,7 +1,9 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Settings
+from .models import Link, SiteInfo
 
 
-admin.site.register(Settings)
+admin.site.register(SiteInfo)
+admin.site.register(Link)
+

@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import django.conf
 import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -74,6 +76,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'settings.footer_context_processor.myfooter',
+                'settings.footer_context_processor.link_context',
             ],
         },
     },
@@ -143,3 +147,102 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# set my ordering list
+# ADMIN_ORDERING = [
+#     ('settings', [
+#         'SiteInfo',
+#         'Link'
+#     ]),
+# ]
+# # # Creating a sort function
+# # def get_app_list(self, request):
+# #     app_dict = self._build_app_dict(request)
+# #     for app_name, object_list in ADMIN_ORDERING:
+# #         app = app_dict[app_name]
+# #         app['models'].sort(key=lambda x: object_list.index(x['object_name']))
+# #         yield app
+
+
+# # Covering django.contrib.admin.AdminSite.get_app_list
+# from django.contrib import admin
+
+# admin.AdminSite.get_app_list = get_app_list
+
+
+
+
+# # "core/settings.py"
+from django.contrib import admin
+
+ADMIN_ORDERING = (
+    ('settings', (
+            'SiteInfo', 
+            'Link', 
+        )),
+    ('blog', (
+            'Post', 
+            'Category'
+        )),
+    ('about', (
+            'About', 
+            'FAQ'
+        )),
+   
+    ('property',
+        (
+        'Property',
+        'Category',
+        'Place',
+        'PropertyBook',
+        'PropertyImages',
+        'PropertyReview',
+        )
+    ),
+    ('auth',('Group','User')),
+   
+    ('django_summernote',('Attachment')),
+    
+    ('taggit',('Tag')),
+       
+)
+   
+   
+   
+
+
+
+
+def get_app_list(self, request, app_label=None):
+    app_dict = self._build_app_dict(request, app_label)
+    
+    if not app_dict:
+        return
+        
+    NEW_ADMIN_ORDERING = []
+    if app_label:
+        for ao in ADMIN_ORDERING:
+            if ao[0] == app_label:
+                NEW_ADMIN_ORDERING.append(ao)
+                break
+    
+    if not app_label:
+        for app_key in list(app_dict.keys()):
+            if not any(app_key in ao_app for ao_app in ADMIN_ORDERING):
+                app_dict.pop(app_key)
+    
+    app_list = sorted(
+        app_dict.values(), 
+        key=lambda x: [ao[0] for ao in ADMIN_ORDERING].index(x['app_label'])
+    )
+     
+    for app, ao in zip(app_list, NEW_ADMIN_ORDERING or ADMIN_ORDERING):
+        if app['app_label'] == ao[0]:
+            for model in list(app['models']):
+                if not model['object_name'] in ao[1]:
+                    app['models'].remove(model)
+        app['models'].sort(key=lambda x: ao[1].index(x['object_name']))
+    return app_list
+
+admin.AdminSite.get_app_list = get_app_list
