@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from settings.admin import SomeModelAdmin
 from .models import About,FAQ
 
 
-admin.site.register(About)
+admin.site.register(About,SomeModelAdmin)
 admin.site.register(FAQ)

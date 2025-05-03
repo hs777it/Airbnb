@@ -1,8 +1,14 @@
 from django.db import models
 
-class SiteInfo(models.Model):   
+class SiteInfoManager(models.Manager):
+    def create_site_info(self, site_name,site_phone):
+        info = self.create(site_name=site_name,phone=site_phone)
+        return info
+
+class SiteInfo(models.Model): 
     site_name = models.CharField(max_length=50)
-    logo = models.ImageField(upload_to='settings/')
+    slogan = models.CharField(max_length=50,blank=True,null=True)
+    logo = models.ImageField(upload_to='settings/', default='media/settings/logo.jpg')
     phone = models.CharField(max_length=20)
     email = models.EmailField(max_length=254)
     desciption = models.TextField(max_length=300)
@@ -12,14 +18,17 @@ class SiteInfo(models.Model):
     address = models.CharField(max_length=100,default='cairo')
     
     class Meta:
+        # managed = False  # Created from a view. Don't remove.
         # verbose_name = "SiteInfo"
         verbose_name_plural = "SiteInfo"
         
     def __str__(self):
         return self.site_name
     
+    objects = SiteInfoManager()
     
-class Link(models.Model):
+    
+class Link(models.Model):   
     text = models.CharField(max_length=50)
     link = models.CharField(max_length=50)
     
@@ -28,4 +37,6 @@ class Link(models.Model):
 
     
     def __str__(self):
-        return self.titles
+        return self.text
+    
+    

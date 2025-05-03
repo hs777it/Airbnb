@@ -38,13 +38,14 @@ class PropertyImages(models.Model):
 
 class Place(models.Model):
     name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to='places/')
+    image = models.ImageField(upload_to='places/',blank=True,null=True)
 
     def __str__(self):
         return str(self.name)    
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    icon = models.CharField(max_length=30)
 
     def __str__(self):
         return str(self.name)
@@ -79,3 +80,11 @@ class PropertyBook(models.Model):
 
     def __str__(self):
         return str(self.property)
+
+class ServicesSection(models.Model):
+    title = models.CharField(max_length=50)
+    icon = models.CharField(max_length=30)
+    description= models.TextField(max_length=1000)
+    
+    def __str__(self):
+        return self.title

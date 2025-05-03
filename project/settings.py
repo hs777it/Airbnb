@@ -15,9 +15,9 @@ import os
 from pathlib import Path
 
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -29,6 +29,8 @@ SECRET_KEY = 'django-insecure-w1(2d1k&9vb045ge^aeyt03t(33&k^(v4#cuy5h!a%%x%iix)p
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+
 
 
 # Application definition
@@ -56,6 +58,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -132,48 +135,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static","staticroot") 
+
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    "/var/www/static/",
+    # "/var/www/static/",
 ]
 
-
-MEDIA_URL = 'media/' 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  
-
-
+# Media
+MEDIA_ROOT = BASE_DIR / "media"
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media') 
+MEDIA_URL = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# set my ordering list
-# ADMIN_ORDERING = [
-#     ('settings', [
-#         'SiteInfo',
-#         'Link'
-#     ]),
-# ]
-# # # Creating a sort function
-# # def get_app_list(self, request):
-# #     app_dict = self._build_app_dict(request)
-# #     for app_name, object_list in ADMIN_ORDERING:
-# #         app = app_dict[app_name]
-# #         app['models'].sort(key=lambda x: object_list.index(x['object_name']))
-# #         yield app
-
-
-# # Covering django.contrib.admin.AdminSite.get_app_list
-# from django.contrib import admin
-
-# admin.AdminSite.get_app_list = get_app_list
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 
 
-# # "core/settings.py"
+# Reordering Admin Menu - "core/settings.py"
 from django.contrib import admin
 
 ADMIN_ORDERING = (
@@ -183,7 +171,8 @@ ADMIN_ORDERING = (
         )),
     ('blog', (
             'Post', 
-            'Category'
+            'Category',
+            'PostTag',
         )),
     ('about', (
             'About', 
@@ -198,21 +187,13 @@ ADMIN_ORDERING = (
         'PropertyBook',
         'PropertyImages',
         'PropertyReview',
+        'ServicesSection'
         )
     ),
     ('auth',('Group','User')),
-   
     ('django_summernote',('Attachment')),
-    
-    ('taggit',('Tag')),
-       
+    ('taggit',('Tag'))
 )
-   
-   
-   
-
-
-
 
 def get_app_list(self, request, app_label=None):
     app_dict = self._build_app_dict(request, app_label)
@@ -246,3 +227,7 @@ def get_app_list(self, request, app_label=None):
     return app_list
 
 admin.AdminSite.get_app_list = get_app_list
+
+
+# https://github.com/lqez/django-summernote/
+# SUMMERNOTE_THEME = 'bs3'  # bs3 bs4 bs5 lite 
